@@ -1,70 +1,88 @@
 // Mavic Glare Shield
 
-//special vars
+// special vars
 $fn=100;
 
-
+// call main module
 mavic_sun_shield();
 
 module mavic_sun_shield() {
-  translate([0,0,16]) {
-    difference() {
-      union() {
-        main_dome();
-        translate([-21,2,-8]) {
-          gimbal_housing_solid();
-        }
-        translate([0,1,23]) {
-          upper_connector_base();
-        }
-        translate([-13,21,-18]) {
-          lower_connector_solid();
-        }
+  difference() {
+    // create main dome with gimbal area
+    union() {
+      main_dome();
+      translate([-24,.5,-4.5]) {
+        gimbal_housing_solid();
       }
-      translate([0,2.5,24]) {
-        rotate([10,0,0]) {
-          cube(size=[38,40,10], center=true);
+      // add upper connector area
+      translate([-3,3,21]) {
+        rotate([18,0,0]) {
+          cube(size=[40,40,18], center=true);
         }
       }
-      translate([0,0,-24]) {
-        cube(size=[60,60,16], center=true);
-      }
-      translate([0,0,16.5]) {
-        cube(size=[18,15,30], center=true);
-      }
-      sphere(d=53.5);
-      translate([-21,2,-8]) {
-        gimbal_housing_hollow();
-      }
-      translate([-13,21,-16]) {
-        rotate([90,0,0]) {
-          linear_extrude(height = 14, center = true) {
-            polygon(points=[[1.5,1.5],[25.5,1.5],[27.5,30],[-2.5,30]]);
-          }
-        }
-      }
-      translate([0,4,21]) {
-        rotate([75,0,0]) {
-          cube(size=[60,10,45], center=true);
-        }
-      }
-      translate([0,25.5,1.5]) {
-        rotate([16,0,0]) {
-          cube(size=[40,6,50], center=true);
-        }
-      }
-      translate([0,28,-16]) {
-        cube(size=[8,4,5], center=true);
+      // add lower connector area
+      translate([-18,20,-17.4]) {
+        lower_connector_solid();
       }
     }
-    for (x=[-9,9]) {
-      translate([x,-18,23]) {
-        rotate([16,0,0]) {
-          upper_connector_tab();
+    // hollow out upper connector area
+    translate([-3,4,24]) {
+      rotate([18,0,0]) {
+        cube(size=[38,40,15], center=true);
+      }
+    }
+    // hollow out the lower connecter area
+    translate([-18,20,-15.5]) {
+      rotate([90,0,0]) {
+        linear_extrude(height = 17, center = true) {
+          polygon(points=[[1.5,1.5],[27.5,1.5],[29.5,32],[-.5,32]]);
         }
       }
     }
-    translate([0,24,-11.6]) {
+    // hollow out the sphere
+    sphere(d=51.5);
+    // hollow out the gimbal area
+    translate([-24,.5,-4]) {
+      gimbal_housing_hollow();
+    }
+    // trim the top at the proper angle
+    translate([2,4.5,28]) {
+      rotate([76,0,0]) {
+        cube(size=[47,24,45], center=true);
+      }
+    }
+    // trim the top of gimbal area at the proper angle
+    translate([-25,4,31]) {
+      rotate([76,8,0]) {
+        cube(size=[12,28,45], center=true);
+      }
+    }
+    // trim the rear at proper angle for lower connecter area
+    translate([0,25,14.5]) {
+      rotate([16,0,0]) {
+        cube(size=[50,9,80], center=true);
+      }
+    }
+    // trim the bottom of the dome
+    translate([-32,-25,-31.2]) {
+      cube(size=[80,60,14], center=false);
+    }
+    // cut out slot for pressing lower connector tab
+    translate([-3,28,-16]) {
+      cube(size=[10,6,5], center=true);
+    }
+  }
+  // add the upper connector tabs
+  for (x=[-12,6]) {
+    translate([x,-16.5,22.5]) {
+      rotate([8,0,0]) {
+        upper_connector_tab();
+      }
+    }
+  }
+  // add the lower connector tabs
+  translate([-3,24.5,-11.2]) {
+    rotate([-10,0,0]) {
       lower_connector_tab();
     }
   }
@@ -72,21 +90,16 @@ module mavic_sun_shield() {
 
 module main_dome() {
   difference() {
-    sphere(d=55);
-    translate([0,29,5]) {
-      cube(size=[40,10,40], center=true);
-    }
-    translate([1,-18,-16]) {
-      cube(size=[34,20,38], center=true);
-    }
-    translate([1,-23,0]) {
-      rotate([-90,0,0]) {
-        difference() {
-          cylinder(d=34.5, h=10, center=true);
-          translate([0,10,-5]) {
-            cube(size=[40,20,20], center=true);
-          }
+    sphere(d=53);
+    // cut out camera view area
+    hull() {
+      translate([0,-19,0]) {
+        rotate([-90,0,0]) {
+          cylinder(d=33, h=15, center=true);
         }
+      }
+      translate([0,-19,-16]) {
+        cube(size=[32.7,18,38], center=true);
       }
     }
   }
@@ -98,7 +111,7 @@ module gimbal_housing_solid() {
       cylinder(d=26, h=14, center=true);
     }
     translate([0,0,18]) {
-      cube(size=[14,26,20], center=true);
+      cube(size=[14,27,20], center=true);
     }
   }
 }
@@ -107,57 +120,39 @@ module gimbal_housing_hollow() {
   hull() {
     translate([1.5,0,0]) {
       rotate([0,90,0]) {
-        cylinder(d=23, h=14, center=true);
+        cylinder(d=24.5, h=14, center=true);
       }
       translate([1.5,0,18]) {
-        cube(size=[14,23,25], center=true);
+        cube(size=[14,25.5,25], center=true);
       }
     }
   } 
 }
 
-module upper_connector_base() {
-  difference() {
-    rotate([18,0,0]) {
-      cube(size=[40,40,10], center=true);
-    }
-    translate([0,0,5]) {
-      rotate([-18,0,0]) {
-        cube(size=[45,45,22], center=true);
-      }
-    }
-  }
-}
-
 module upper_connector_tab() {
   cube(size=[5.6,1.2,4.5], center=true);
-  translate([0,-1,2]) {
+  translate([0,-1,2.2]) {
     rotate([-20,0,0]) {
-      cube(size=[5.6,2,1.4], center=true);
+      cube(size=[5.6,2,1.2], center=true);
     }
-  }
-}
-
-module lower_connector_tab() {
-  rotate([-17,0,0]) {
-    cube(size=[6,2,7], center=true);
-  }
-  translate([0,1.3,3]) {
-    cube(size=[6,2.5,2], center=true);
   }
 }
 
 module lower_connector_solid() {
   difference() {
     rotate([90,0,0]) {
-      linear_extrude(height = 12, center = true) {
-        polygon(points=[[0,0],[28,0],[30,30],[-5,30]]);
+      linear_extrude(height = 16, center = true) {
+        polygon(points=[[0,0],[29,0],[31,31],[-2,31]]);
       }
     }
-    translate([0,12,2]) {
-      rotate([16,0,0]) {
-        cube(size=[70,10,70], center=true);
-      }
+  }
+}
+
+module lower_connector_tab() {
+  cube(size=[8,2,6.5], center=true);
+  translate([0,1.3,2.5]) {
+    rotate([10,0,0]) {
+      cube(size=[8,2.5,2], center=true);
     }
   }
 }
