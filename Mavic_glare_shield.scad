@@ -35,12 +35,12 @@ module mavic_sun_shield() {
     translate([-18,20,-15.5]) {
       rotate([90,0,0]) {
         linear_extrude(height = 17, center = true) {
-          polygon(points=[[1.5,1.5],[27.5,1.5],[29.5,32],[-.5,32]]);
+          polygon(points=[[1.5,1.5],[28.5,1.5],[30.5,32],[-1.5,32]]);
         }
       }
     }
     // hollow out the sphere
-    sphere(d=51.5);
+    sphere(d=52.5);
     // hollow out the gimbal area
     translate([-24,.5,-4]) {
       gimbal_housing_hollow();
@@ -69,7 +69,7 @@ module mavic_sun_shield() {
     }
     // cut out slot for pressing lower connector tab
     translate([-3,28,-16]) {
-      cube(size=[10,6,5], center=true);
+      cube(size=[12,6,5], center=true);
     }
   }
   // add the upper connector tabs
@@ -80,17 +80,23 @@ module mavic_sun_shield() {
       }
     }
   }
-  // add the lower connector tabs
-  translate([-3,24.5,-11.2]) {
-    rotate([-10,0,0]) {
-      lower_connector_tab();
+  // add the lower connector tab
+  difference() {
+    translate([-3,23.8,-11.2]) {
+      rotate([-10,0,0]) {
+        lower_connector_tab();
+      }
+    }
+    // trim the bottom of the dome (match previous trim)
+    translate([-32,-25,-31.2]) {
+      cube(size=[80,60,14], center=false);
     }
   }
 }
 
 module main_dome() {
   difference() {
-    sphere(d=53);
+    sphere(d=54);
     // cut out camera view area
     hull() {
       translate([0,-19,0]) {
@@ -142,17 +148,34 @@ module lower_connector_solid() {
   difference() {
     rotate([90,0,0]) {
       linear_extrude(height = 16, center = true) {
-        polygon(points=[[0,0],[29,0],[31,31],[-2,31]]);
+        polygon(points=[[0,0],[30,0],[32,31],[-3,31]]);
       }
     }
   }
 }
 
 module lower_connector_tab() {
-  cube(size=[8,2,6.5], center=true);
-  translate([0,1.3,2.5]) {
-    rotate([10,0,0]) {
-      cube(size=[8,2.5,2], center=true);
+  cube(size=[10,1.8,6.4], center=true);
+  rotate([4,0,0]) {
+    translate([0,1.8,2.2]) {
+      cube(size=[10,3,1.6], center=true);
+    }
+    difference() {
+      hull() {
+        translate([0,3.5,-4]) {
+          cube(size=[10,1.8,5], center=true);
+        }
+        translate([0,3.2,2]) {
+          rotate([0,90,0]) {
+            cylinder(d=1.8, h=10, center=true);
+          }
+        }
+      }
+      translate([0,4.4,-.2]) {
+        rotate([0,90,0]) {
+          cylinder(d=2.2, h=11, center=true);
+        }
+      }
     }
   }
 }
